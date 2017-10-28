@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
@@ -52,20 +53,18 @@ import org.apache.tools.ant.types.ZipFileSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.http.CacheControl;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.DigestUtils;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.resource.ResourceUrlProvider;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -256,24 +255,26 @@ public class MainController extends AbstractInitializrController {
                 "build.gradle");
     }
 
-    @RequestMapping("/create-repo")
-    @ResponseBody
-    public void createRepo(BasicProjectRequest basicRequest, HttpServletResponse response)
+    @GetMapping("/create-repo")
+    //@ResponseBody
+    public void createRepo(BasicProjectRequest basicRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        //response.setAttribute("param1", "foo");
-        //request.setAttribute("param2", "bar");
-        //return "redirect:http://localhost:2866/command/Initializr?foo=bar";
-        // Translate to Atomist parameters
 
-        String AtomistBase = "http://localhost:2866/";
+        String AtomistBase = "http://localhost:2866";
         String AtomistCommand = "Initializr";
-        List<String> args = new LinkedList<>();
 
+        System.out.println("name is " + basicRequest.getName());
 
+        String postUri = String.format("%s/%s", AtomistBase, "InitializrX");
 
-        String uri = String.format("%s/command/%s?%s", AtomistBase, AtomistCommand,
-                String.join(",", args));
-        response.sendRedirect(uri);
+        RestTemplate rt = new RestTemplate();
+        URI resource = rt.postForLocation(postUri, basicRequest);
+
+        System.out.println(String.format("Spring sent the post to %s, redirect to %s", postUri, resource));
+
+        request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+        //response.s("body", basicRequest);
+        response.sendRedirect(String.format("%s/%s", AtomistBase, resource.toString()));
     }
 
     @RequestMapping("/starter.zip")
