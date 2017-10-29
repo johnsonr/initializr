@@ -255,25 +255,18 @@ public class MainController extends AbstractInitializrController {
                 "build.gradle");
     }
 
+    /**
+     * Post the BasicProjectRequest to Atomist and follow the redirect returned for the next step of the form process.
+     */
     @GetMapping("/create-repo")
-    //@ResponseBody
     public void createRepo(BasicProjectRequest basicRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-
         String AtomistBase = "http://localhost:2866";
-        String AtomistCommand = "Initializr";
-
-        System.out.println("name is " + basicRequest.getName());
-
         String postUri = String.format("%s/%s", AtomistBase, "InitializrX");
-
         RestTemplate rt = new RestTemplate();
         URI resource = rt.postForLocation(postUri, basicRequest);
-
         System.out.println(String.format("Spring sent the post to %s, redirect to %s", postUri, resource));
-
         request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
-        //response.s("body", basicRequest);
         response.sendRedirect(String.format("%s/%s", AtomistBase, resource.toString()));
     }
 
