@@ -83,6 +83,8 @@ import static io.spring.initializr.util.Agent.AgentId.SPRING_BOOT_CLI;
 @Controller
 public class MainController extends AbstractInitializrController {
 
+    public final String AtomistBase = "http://localhost:2866";
+
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     public static final MediaType HAL_JSON_CONTENT_TYPE = MediaType
@@ -263,10 +265,19 @@ public class MainController extends AbstractInitializrController {
     @GetMapping("/create-repo")
     public void createRepo(BasicProjectRequest basicRequest, HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        String AtomistBase = "http://localhost:2866";
-        String postUri = String.format("%s/%s", AtomistBase, "InitializrX");
+        String postUri = String.format("%s/%s", AtomistBase, "requestRepoCreation");
         URI resource = restTemplate.postForLocation(postUri, basicRequest);
-        System.out.println(String.format("Spring sent the post to %s, redirect to %s", postUri, resource));
+        System.out.println(String.format("Spring sent the repo creation post to %s, redirect to %s", postUri, resource));
+        request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
+        response.sendRedirect(String.format("%s/%s", AtomistBase, resource.toString()));
+    }
+
+    @GetMapping("/create-zip")
+    public void createZip(BasicProjectRequest basicRequest, HttpServletRequest request, HttpServletResponse response)
+            throws IOException {
+        String postUri = String.format("%s/%s", AtomistBase, "requestZipCreation");
+        URI resource = restTemplate.postForLocation(postUri, basicRequest);
+        System.out.println(String.format("Spring sent the zip creation post to %s, redirect to %s", postUri, resource));
         request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
         response.sendRedirect(String.format("%s/%s", AtomistBase, resource.toString()));
     }
