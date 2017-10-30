@@ -92,6 +92,8 @@ public class MainController extends AbstractInitializrController {
     private final DependencyMetadataProvider dependencyMetadataProvider;
     private final CommandLineHelpGenerator commandLineHelpGenerator;
 
+    private final RestTemplate restTemplate = new RestTemplate();
+
     public MainController(InitializrMetadataProvider metadataProvider,
                           TemplateRenderer templateRenderer, ResourceUrlProvider resourceUrlProvider,
                           ProjectGenerator projectGenerator,
@@ -263,8 +265,7 @@ public class MainController extends AbstractInitializrController {
             throws IOException {
         String AtomistBase = "http://localhost:2866";
         String postUri = String.format("%s/%s", AtomistBase, "InitializrX");
-        RestTemplate rt = new RestTemplate();
-        URI resource = rt.postForLocation(postUri, basicRequest);
+        URI resource = restTemplate.postForLocation(postUri, basicRequest);
         System.out.println(String.format("Spring sent the post to %s, redirect to %s", postUri, resource));
         request.setAttribute(View.RESPONSE_STATUS_ATTRIBUTE, HttpStatus.TEMPORARY_REDIRECT);
         response.sendRedirect(String.format("%s/%s", AtomistBase, resource.toString()));
