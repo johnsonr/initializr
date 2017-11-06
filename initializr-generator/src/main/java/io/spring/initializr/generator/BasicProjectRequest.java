@@ -43,6 +43,34 @@ public class BasicProjectRequest {
 	private String language;
 	private String packageName;
 	private String javaVersion;
+	private String sourceOwner;
+	private String sourceRepo;
+
+	public String getSourceOwner() {
+		return sourceOwner;
+	}
+
+	public void setSourceOwner(String sourceOwner) {
+		this.sourceOwner = sourceOwner;
+	}
+
+	public String getSourceRepo() {
+		return sourceRepo;
+	}
+
+	public void setSourceRepo(String sourceRepo) {
+		this.sourceRepo = sourceRepo;
+	}
+
+	public String getSourceBranch() {
+		return sourceBranch;
+	}
+
+	public void setSourceBranch(String sourceBranch) {
+		this.sourceBranch = sourceBranch;
+	}
+
+	private String sourceBranch = "master";
 
 	// The base directory to create in the archive - no baseDir by default
 	private String baseDir;

@@ -224,7 +224,11 @@ public class MainController extends AbstractInitializrController {
     }
 
     @RequestMapping(value = "/", produces = "text/html")
-    public String home(Map<String, Object> model) {
+    public String home(Map<String, Object> model,
+                       @RequestParam(required = false) String sourceOwner,
+                       @RequestParam(required = false) String sourceRepo) {
+        model.put("sourceOwner", sourceOwner);
+        model.put("sourceRepo", sourceRepo);
         renderHome(model);
         return "home";
     }
