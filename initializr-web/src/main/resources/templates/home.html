@@ -60,6 +60,7 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
             {{#sourceOwner}}
                 <input id="sourceOwner" name="sourceOwner" type="hidden" value="{{sourceOwner}}">
                 <input id="sourceRepo" name="sourceRepo" type="hidden" value="{{sourceRepo}}">
+                <input id="sourceBranch" name="sourceBranch" type="hidden" value="{{sourceBranch}}">
             {{/sourceOwner}}
 
             <div class="row">
@@ -141,7 +142,7 @@ new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
                             formaction="/create-repo">
                         Create Repo
                     </button>
-                    <button tabindex="13" name="generate-project" type="submit" class="btn btn-sm"
+                    <button tabindex="13" name="generate-project" type="submit" class="btn btn-lg btn-secondary"
                             role="button">
                         Generate Zip
                     </button>
