@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 import com.samskivert.mustache.Mustache;
@@ -224,11 +225,31 @@ public class MainController extends AbstractInitializrController {
     }
 
     @RequestMapping(value = "/", produces = "text/html")
-    public String home(Map<String, Object> model,
-                       @RequestParam(required = false) String sourceOwner,
-                       @RequestParam(required = false) String sourceRepo) {
+    public String home(Map<String, Object> model) {
+        renderHome(model);
+        return "home";
+    }
+
+    /**
+     * Choose a custom seed
+     *
+     * @param model
+     * @param sourceOwner
+     * @param sourceRepo
+     * @param sourceBranch
+     * @return
+     */
+    @RequestMapping(value = {
+            "/seed/{sourceOwner}/{sourceRepo}/{sourceBranch}",
+            "/seed/{sourceOwner}/{sourceRepo}"
+    }, produces = "text/html")
+    public String customSeed(Map<String, Object> model,
+                             @PathVariable String sourceOwner,
+                             @PathVariable String sourceRepo,
+                             @PathVariable Optional<String> sourceBranch) {
         model.put("sourceOwner", sourceOwner);
         model.put("sourceRepo", sourceRepo);
+        model.put("sourceBranch", sourceBranch.orElse("master"));
         renderHome(model);
         return "home";
     }
