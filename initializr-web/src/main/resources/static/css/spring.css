@@ -48,6 +48,10 @@ button.btn-primary {
     margin-top: 1em;
 }
 
+button.btn-secondary {
+    padding: 10px 58px;
+}
+
 button kbd {
     background: none;
     margin-left: 0.5em;
